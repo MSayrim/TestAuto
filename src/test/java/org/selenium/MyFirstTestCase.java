@@ -1,7 +1,7 @@
 package org.selenium;
-
 import org.openqa.selenium.By;
 import org.selenium.pom.base.BaseTest;
+import org.selenium.pom.pages.CartPage;
 import org.selenium.pom.pages.HomePage;
 import org.selenium.pom.pages.StorePage;
 import org.testng.Assert;
@@ -10,31 +10,35 @@ import org.testng.annotations.Test;
 public class MyFirstTestCase extends BaseTest {
 
     @Test
-    public void guestCheckoutUsingDricetBankTransfer() throws InterruptedException {
+    public void guestCheckoutUsingDirectBankTransfer() throws InterruptedException {
         driver.get("https://www.askomdch.com");
         HomePage homePage = new HomePage(driver);
         StorePage storePage = homePage.clickStoreMenuLink();
         storePage.
                 enterTextInSearchFld("Blue").
                 clickSearchBtn();
+        Thread.sleep(5000);
         Assert.assertEquals(storePage.getTitle(),"Search results: “Blue”");
-        storePage.clickAddToCartBtn();
+        storePage.clickAddToCartBtn("Blue Shoes");
+        Thread.sleep(3000);
+        CartPage cartPage =storePage.clickViewChart();
+        Thread.sleep(3000);
 
-        driver.findElement(By.cssSelector("#menu-item-1227 > a")).click();
-        Thread.sleep(3000);
-        driver.findElement(By.id("woocommerce-product-search-field-0")).sendKeys("Blue");
-        driver.findElement(By.cssSelector("button[value='Search']")).click();
-        Thread.sleep(3000);
+//
+//        driver.findElement(By.cssSelector("#menu-item-1227 > a")).click();
+//        Thread.sleep(3000);
+//        driver.findElement(By.id("woocommerce-product-search-field-0")).sendKeys("Blue");
+//        driver.findElement(By.cssSelector("button[value='Search']")).click();
+//        Thread.sleep(3000);
+//        Assert.assertEquals(
+//                driver.findElement(By.cssSelector(".woocommerce-products-header__title.page-title")).getText(),
+//                "Search results: “Blue”"
+//        );
+//        driver.findElement(By.cssSelector("a[aria-label='Add “Blue Shoes” to your cart']")).click();
+//        Thread.sleep(3000);
+//        driver.findElement(By.cssSelector("a[title='View cart']")).click();
         Assert.assertEquals(
-                driver.findElement(By.cssSelector(".woocommerce-products-header__title.page-title")).getText(),
-                "Search results: “Blue”"
-        );
-        Thread.sleep(3000);
-        driver.findElement(By.cssSelector("a[aria-label='Add “Blue Shoes” to your cart']")).click();
-        Thread.sleep(3000);
-        driver.findElement(By.cssSelector("a[title='View cart']")).click();
-        Assert.assertEquals(
-                driver.findElement(By.cssSelector("td[class='product-name'] a")).getText(),
+                cartPage.getProductName(),
                 "Blue Shoes"
         );
         driver.findElement(By.cssSelector(".checkout-button")).click();
